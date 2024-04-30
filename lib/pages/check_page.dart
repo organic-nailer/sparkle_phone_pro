@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_arduino_serial/light_controller.dart';
+import 'package:sparkle_phone_pro/light_controller.dart';
 
 class CheckPage extends StatefulWidget {
   const CheckPage({Key? key}) : super(key: key);

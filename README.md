@@ -1,4 +1,4 @@
-# flutter_arduino_serial
+# sparkle_phone_pro
 
 A new Flutter project.
 

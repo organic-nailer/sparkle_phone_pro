@@ -2,7 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_arduino_serial/light_controller.dart';
+import 'package:sparkle_phone_pro/light_controller.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 
 class CirclePage extends StatelessWidget {

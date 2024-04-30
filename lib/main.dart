@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_arduino_serial/light_controller.dart';
-import 'package:flutter_arduino_serial/pages/ball_reflection_page.dart';
-import 'package:flutter_arduino_serial/pages/check_page.dart';
-import 'package:flutter_arduino_serial/pages/circle_page.dart';
+import 'package:sparkle_phone_pro/light_controller.dart';
+import 'package:sparkle_phone_pro/pages/ball_reflection_page.dart';
+import 'package:sparkle_phone_pro/pages/check_page.dart';
+import 'package:sparkle_phone_pro/pages/circle_page.dart';
 
 void main() {
   runApp(const MyApp());

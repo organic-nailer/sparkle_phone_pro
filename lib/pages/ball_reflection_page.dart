@@ -3,7 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter_arduino_serial/light_controller.dart';
+import 'package:sparkle_phone_pro/light_controller.dart';
 
 enum Side {
   top,
