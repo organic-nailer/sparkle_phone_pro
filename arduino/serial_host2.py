@@ -17,14 +17,23 @@ try:
     print("Sending message to Arduino")
     start = time.time()
     while True:
-        random_values = np.zeros(66, dtype=np.uint8)
+        colors = np.zeros((68,3), dtype=np.uint8)
         r = 3 if phase % 3 == 0 else 1
         g = 3 if phase % 4 == 0 else 1
         b = 3 if phase % 5 == 0 else 1
-        random_values[:10] = (r << 4) + (g << 2) + b
-        random_values = np.roll(random_values, i)
-        random_values = np.hstack((random_values, np.array([255], dtype=np.uint8)))
-        ser.write(random_values.tobytes())
+        colors[:10,0] = r
+        colors[10:20,1] = g
+        colors[20:30,2] = b
+
+        colors = np.roll(colors, i, axis=0)
+
+        buffer = np.zeros(51, dtype=np.uint8)
+        for j in range(17):
+            buffer[j*3] = (colors[j*4,0] << 0) + (colors[j*4+1,0] << 2) + (colors[j*4+2,0] << 4) + (colors[j*4+3,0] << 6)
+            buffer[j*3+1] = (colors[j*4,1] << 0) + (colors[j*4+1,1] << 2) + (colors[j*4+2,1] << 4) + (colors[j*4+3,1] << 6)
+            buffer[j*3+2] = (colors[j*4,2] << 0) + (colors[j*4+1,2] << 2) + (colors[j*4+2,2] << 4) + (colors[j*4+3,2] << 6)
+        # random_values = np.hstack((random_values, np.array([255], dtype=np.uint8)))
+        ser.write(buffer.tobytes())
         time.sleep(0.001)
         # value = ser.readline()
         # if len(value) > 0:

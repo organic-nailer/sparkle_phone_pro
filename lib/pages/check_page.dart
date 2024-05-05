@@ -42,13 +42,11 @@ class _CheckPageState extends State<CheckPage> {
                 }).toList(),
               ),
               OutlinedButton(onPressed: () {
-                Uint8List data = Uint8List(selectionList.length + 1);
-                for (int i = 0; i < selectionList.length; i++) {
-                  data[i] = selectionList[i] ? 63 : 0;
-                }
-                data[selectionList.length] = 255; // [255] is the end of the data
-                lightController.sendRaw(data);
-                // lightController.sendRaw(Uint8List.fromList(selectionList.map((e) => e ? 100 : 0).toList()..add(255)));
+                final colors = <Color>[
+                  for (int i = 0; i < selectionList.length; i++)
+                    selectionList[i] ? Colors.blue : Colors.black
+                ];
+                lightController.sendColors(colors);
               }, child: const Text('Send')),
             ]
           )

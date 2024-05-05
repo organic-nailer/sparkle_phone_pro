@@ -8,7 +8,7 @@ import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 class CirclePage extends StatelessWidget {
   const CirclePage({super.key});
 
-  final int ledCount = 64;
+  final int ledCount = 68;
 
   @override
   Widget build(BuildContext context) {
@@ -33,16 +33,11 @@ class CirclePage extends StatelessWidget {
                 min: 0,
                 onChange: (double value) {
                   if (lightController.status == LightStatus.connected) {
-                    List<bool> selectionList = List.generate(ledCount, (index) => false);
-                    for (int i = 0; i < ledCount; i++) {
-                      selectionList[i] = i < value;
-                    }
-                    final data = Uint8List(ledCount + 1);
-                    for (int i = 0; i < ledCount; i++) {
-                      data[i] = selectionList[i] ? 63 : 0;
-                    }
-                    data[ledCount] = 255;
-                    lightController.sendRaw(data);
+                    final colors = <Color>[
+                      for (int i = 0; i < ledCount; i++)
+                        i < value.toInt() ? Colors.blue : Colors.black
+                    ];
+                    lightController.sendColors(colors);
                   }
                 },
                 appearance: CircularSliderAppearance(

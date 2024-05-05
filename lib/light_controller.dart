@@ -37,6 +37,9 @@ class LightController extends ChangeNotifier {
   UsbDevice? _device;
   LightStatus status = LightStatus.idle;
   late StreamSubscription<UsbEvent> _usbEventSubscription;
+  final Duration minSendInterval = const Duration(milliseconds: 10);
+  Timer? _sendTimer;
+
 
   LightController() {
     _usbEventSubscription = UsbSerial.usbEventStream!.listen((UsbEvent event) {
@@ -152,12 +155,60 @@ class LightController extends ChangeNotifier {
   }
 
   void sendRaw(Uint8List data) {
-    if (_port != null) {
-      _port!.write(data);
-    } else {
+
+    if (_port == null) {
       if (kDebugMode) {
         print("Port is null");
       }
+      return;
     }
+    if (_sendTimer != null) {
+      if (kDebugMode) {
+        print("Write in progress");
+      }
+    } else {
+      _sendTimer = Timer(minSendInterval, () {
+        _sendTimer = null;
+      });
+      _port!.write(data);
+    }
+  }
+
+  void sendColors(List<Color> colors) {
+    final colorsExt = colors.length < 66
+      ? colors + List.filled(66 - colors.length, Colors.black)
+      : colors.sublist(0, 66);
+
+    final buffer = Uint8List(67);
+    for (int i = 0; i < 66; i++) {
+      buffer[i] = colorsExt[i].toLedColor();
+    }
+    buffer[66] = 255;
+    sendRaw(buffer);
+  }
+
+  // void sendColors(List<Color> colors) {
+  //   final colorsExt = colors.length < 68
+  //     ? colors + List.filled(68 - colors.length, Colors.black)
+  //     : colors.sublist(0, 68);
+  //   final buffer = Uint8List(51);
+  //   for (int i = 0; i < 17; i++) {
+  //     final c1 = colorsExt[i * 4];
+  //     final c2 = colorsExt[i * 4 + 1];
+  //     final c3 = colorsExt[i * 4 + 2];
+  //     final c4 = colorsExt[i * 4 + 3];
+  //     buffer[i * 3] = (c1.red / 85).round() + ((c2.red / 85).round() << 2) + ((c3.red / 85).round() << 4) + ((c4.red / 85).round() << 6);
+  //     buffer[i * 3 + 1] = (c1.green / 85).round() + ((c2.green / 85).round() << 2) + ((c3.green / 85).round() << 4) + ((c4.green / 85).round() << 6);
+  //     buffer[i * 3 + 2] = (c1.blue / 85).round() + ((c2.blue / 85).round() << 2) + ((c3.blue / 85).round() << 4) + ((c4.blue / 85).round() << 6);
+  //   }
+  //   sendRaw(buffer);
+  // }
+}
+
+extension ColorExt on Color {
+  int toLedColor() {
+    return (red / 85).round() 
+      + ((green / 85).round() << 2) 
+      + ((blue / 85).round() << 4);
   }
 }

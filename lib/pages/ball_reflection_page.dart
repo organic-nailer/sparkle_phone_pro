@@ -110,18 +110,7 @@ class _BallReflectionPageState extends State<BallReflectionPage> with SingleTick
 
   void _updateLight() {
     final lightController = LightControllerScope.of(context);
-    final data = Uint8List(65);
-    for (int i = 0; i < 64; i++) {
-      final color = selectionList[i];
-      data[i] = color2int(color);
-    }
-    print(data);
-    data[64] = 255;
-    lightController.sendRaw(data);
-  }
-
-  int color2int(Color color) {
-    return (color.red / 85.0).round() << 4 | (color.green / 85.0).round() << 2 | (color.blue / 85.0).round();
+    lightController.sendColors(selectionList);
   }
 
   @override
